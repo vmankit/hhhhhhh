@@ -7,10 +7,14 @@ import {
   WorkoutInput,
 } from "@/lib/workouts";
 import { attemptSync } from "@/lib/sync";
+import { getSessionGoogleSub } from "@/lib/session";
 
 export const dynamic = "force-dynamic";
 
 export async function GET() {
+  if (!getSessionGoogleSub()) {
+    return NextResponse.json({ error: "Not signed in" }, { status: 401 });
+  }
   const res = await query(
     `SELECT * FROM workouts ORDER BY start_time DESC LIMIT 200`
   );
@@ -20,6 +24,9 @@ export async function GET() {
 const VALID_ACTIVITY_TYPES = new Set(ACTIVITY_TYPES.map((a) => a.value));
 
 export async function POST(req: NextRequest) {
+  if (!getSessionGoogleSub()) {
+    return NextResponse.json({ error: "Not signed in" }, { status: 401 });
+  }
   let body: WorkoutInput;
   try {
     body = await req.json();
