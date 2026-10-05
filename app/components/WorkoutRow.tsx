@@ -33,7 +33,7 @@ export default function WorkoutRow({
 
   return (
     <div className="flex items-start justify-between rounded-xl border border-gray-200 bg-white p-4 shadow-sm">
-      <div className="min-w-0">
+      <div className="min-w-0 flex-1">
         <p className="font-medium">{LABELS[workout.activity_type] ?? workout.activity_type}</p>
         <p className="text-sm text-gray-500">
           {workout.distance_km ? `${Number(workout.distance_km).toFixed(2)} km · ` : ""}
@@ -41,7 +41,7 @@ export default function WorkoutRow({
         </p>
         <p className="text-sm text-gray-500">{formatDate(workout.start_time)}</p>
         {workout.sync_status === "failed" && workout.sync_error && (
-          <p className="mt-1 max-w-xs truncate text-xs text-red-600" title={workout.sync_error}>
+          <p className="mt-1 line-clamp-3 break-words text-xs text-red-600" title={workout.sync_error}>
             {workout.sync_error}
           </p>
         )}
@@ -53,7 +53,7 @@ export default function WorkoutRow({
           <button
             onClick={retry}
             disabled={retrying}
-            className="text-xs font-medium text-brand-600 hover:underline disabled:opacity-60"
+            className="-mr-2 rounded-lg px-3 py-2 text-sm font-medium text-brand-600 hover:bg-gray-50 disabled:opacity-60"
           >
             {retrying ? "Retrying..." : "Retry sync"}
           </button>
