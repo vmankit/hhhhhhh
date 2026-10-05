@@ -22,13 +22,16 @@ function createPool() {
   });
 }
 
-export const pool = global.__pgPool ?? createPool();
-if (process.env.NODE_ENV !== "production") {
-  global.__pgPool = pool;
+// Created lazily so `next build` can import this module without POSTGRES_URL.
+export function getPool(): Pool {
+  if (!global.__pgPool) {
+    global.__pgPool = createPool();
+  }
+  return global.__pgPool;
 }
 
 export async function query<T extends QueryResultRow = any>(text: string, params?: any[]) {
-  const client = await pool.connect();
+  const client = await getPool().connect();
   try {
     const res = await client.query<T>(text, params);
     return res;
